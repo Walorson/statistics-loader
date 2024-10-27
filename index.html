@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistics Loader</title>
+    <meta name="author" content="Szymon Gniadek">
+
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+    <input type="file" id="load-button" accept=".txt">
+    <div id="values">5, 2, 1</div>
+    <table id="table-of-numbers">
+        <tr class="row"><td><b>Value</b></td></tr>
+        <tr class="row"><td><b>Quantity</b></td></tr>
+    </table>
+    <div>Average: <span id="average"></span></div>
+    <div>Median: <span id="median"></span></div>
+    <div>Mode: <span id="mode"></span></div>
+    <script src="scripts/dist/main.js" type="module"></script>
+</body>
+</html>
