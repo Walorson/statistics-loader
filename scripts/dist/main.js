@@ -1,4 +1,5 @@
 var loadButton = document.getElementById("load-button");
+var counter;
 var output = {
     average: document.getElementById("average"),
     median: document.getElementById("median"),
@@ -17,14 +18,28 @@ loadButton.addEventListener("change", function (e) {
 });
 function loadStatistics(text) {
     var numbers = getNumbers(text);
+    counter = createCounter(numbers);
     displayStatistics(numbers);
     output.average.textContent = avg(numbers) + "";
     output.median.textContent = median(numbers) + "";
-    createTableOfNumbers(numbers);
+    createTableOfNumbers();
+    createBarChart();
 }
-function getNumbers(text) {
+function getNumbers(text, separator) {
     if (text === void 0) { text = ""; }
-    return text.split("").filter(function (char) { return !isNaN(parseInt(char)) || char == '.'; }).map(Number).sort();
+    if (separator === void 0) { separator = ","; }
+    var numbers = [];
+    var number = "";
+    for (var i = 0; i < text.length; i++) {
+        if (text[i] != separator)
+            number += text[i];
+        else {
+            numbers.push(number);
+            number = "";
+        }
+    }
+    numbers.push(number);
+    return numbers.map(Number).sort(function (a, b) { return a - b; });
 }
 function displayStatistics(numbers) {
     document.getElementById("values").innerHTML = numbers.join(", ");
@@ -42,7 +57,8 @@ function median(numbers) {
         return numbers[Math.floor(len / 2 - 1)];
     }
 }
-function mode(dictionary) {
+function mode(dictionary, returnQuantity) {
+    if (returnQuantity === void 0) { returnQuantity = false; }
     var maxQuantity = 1;
     for (var key in dictionary) {
         if (dictionary[key] > maxQuantity)
@@ -53,13 +69,18 @@ function mode(dictionary) {
         if (dictionary[key] == maxQuantity)
             mode.push(parseInt(key));
     }
-    return mode;
+    if (returnQuantity == true)
+        return maxQuantity;
+    else
+        return mode;
 }
-function createTableOfNumbers(numbers) {
-    var counter = numbers.reduce(function (acc, num) {
+function createCounter(numbers) {
+    return numbers.reduce(function (acc, num) {
         acc[num] = (acc[num] | 0) + 1;
         return acc;
     }, {});
+}
+function createTableOfNumbers() {
     var row = document.querySelectorAll(".row");
     for (var key in counter) {
         row[0].innerHTML += "<td>".concat(key, "</td>");
@@ -70,6 +91,24 @@ function createTableOfNumbers(numbers) {
         output.mode.textContent += mod[i];
         if (i < mod.length - 1) {
             output.mode.textContent += ", ";
+        }
+    }
+}
+function createBarChart() {
+    var barChart = document.getElementById("bar-chart");
+    for (var i = 0; i <= mode(counter, true); i++) {
+        barChart.innerHTML += "<tr class='row-bar-chart'></tr>";
+    }
+    var rows = document.querySelectorAll(".row-bar-chart");
+    for (var key in counter) {
+        rows[rows.length - 1].innerHTML += "<td>".concat(key, "</td>");
+        var j = rows.length - 2;
+        for (var i = 0; i < counter[key]; i++) {
+            rows[j].innerHTML += "<td class=\"block\"></td>";
+            j--;
+        }
+        for (var i = j; i >= 0; i--) {
+            rows[i].innerHTML += "<td></td>";
         }
     }
 }

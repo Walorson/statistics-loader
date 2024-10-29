@@ -1,4 +1,5 @@
 const loadButton: HTMLElement = document.getElementById("load-button");
+let counter: {};
 const output = {
     average: document.getElementById("average"),
     median: document.getElementById("median"),
@@ -23,16 +24,33 @@ loadButton.addEventListener("change", (e: any) => {
 function loadStatistics(text: string): void
 {
     let numbers: number[] = getNumbers(text);
+    counter = createCounter(numbers);
     displayStatistics(numbers);
 
     output.average.textContent = avg(numbers) + "";
     output.median.textContent =  median(numbers) + "";
-    createTableOfNumbers(numbers);
+    createTableOfNumbers();
+    createBarChart();
 }
 
-function getNumbers(text: string = ""): number[]
+function getNumbers(text: string = "", separator: string = ","): number[]
 {
-    return text.split("").filter(char => !isNaN(parseInt(char)) || char == '.').map(Number).sort();
+    const numbers: string[] = [];
+    let number: string = "";
+
+    for(let i=0; i < text.length; i++)
+    {
+        if(text[i] != separator)
+            number += text[i];
+        else {
+            numbers.push(number);
+            number = "";
+        }
+    }
+
+    numbers.push(number);
+
+    return numbers.map(Number).sort(function(a, b){return a-b});
 }
 
 function displayStatistics(numbers: number[]): void
@@ -61,7 +79,7 @@ function median(numbers: number[]): number
     }
 }
 
-function mode(dictionary: {}): number[]
+function mode(dictionary: {}, returnQuantity: boolean = false): any
 {
     let maxQuantity: number = 1;
     for(const key in dictionary)
@@ -78,16 +96,21 @@ function mode(dictionary: {}): number[]
             mode.push(parseInt(key));
     }
 
-    return mode;
+    if(returnQuantity == true)
+        return maxQuantity;
+    else return mode;
 }
 
-function createTableOfNumbers(numbers: number[]): void
+function createCounter(numbers: number[]): {}
 {
-    const counter = numbers.reduce((acc, num) => {
+    return numbers.reduce((acc, num) => {
         acc[num] = (acc[num] | 0) + 1;
         return acc;
     }, {});
+}
 
+function createTableOfNumbers(): void
+{   
     const row = document.querySelectorAll(".row");
 
     for(const key in counter)
@@ -104,6 +127,35 @@ function createTableOfNumbers(numbers: number[]): void
         
         if(i < mod.length - 1) {
             output.mode.textContent += ", ";
+        }
+    }
+}
+
+function createBarChart()
+{
+    const barChart: HTMLElement = document.getElementById("bar-chart");
+
+    for(let i = 0; i <= mode(counter, true); i++)
+    {
+        barChart.innerHTML += "<tr class='row-bar-chart'></tr>";
+    }
+
+    const rows: any = document.querySelectorAll(".row-bar-chart");
+
+    for(const key in counter)
+    {
+        rows[rows.length - 1].innerHTML += `<td>${key}</td>`;
+
+        let j: number = rows.length - 2;
+        for(let i = 0; i < counter[key]; i++)
+        {
+            rows[j].innerHTML += `<td class="block"></td>`;
+            j--;
+        }
+
+        for(let i = j; i >= 0; i--)
+        {
+            rows[i].innerHTML += `<td></td>`;
         }
     }
 }
