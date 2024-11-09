@@ -7,6 +7,8 @@
     <meta name="author" content="Szymon Gniadek">
 
     <link rel="stylesheet" href="css/main.css">
+
+    <script src="scripts/dist/main.js" type="module" defer></script>
 </head>
 <body>
     <input type="file" id="load-button" accept=".txt">
@@ -18,10 +20,15 @@
     <div>Average: <span id="average"></span></div>
     <div>Median: <span id="median"></span></div>
     <div>Mode: <span id="mode"></span></div>
+    <div>Gap: <span id="gap"></span></div>
 
-    <table id="bar-chart">
-    </table>
-
-    <script src="scripts/dist/main.js" type="module"></script>
+    <div id="bar-chart">
+        <div id="chart-lines">
+            <div class="chart-line"></div>
+            <div class="chart-line"></div>
+            <div class="chart-line"></div>
+        </div>
+        <div class="bar"></div>
+    </div>
 </body>
 </html>

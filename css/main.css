@@ -18,24 +18,36 @@ body {
 .row:last-of-type {
     background-color: rgb(25, 174, 42);
 }
-.bar {
-    width: 100%;
-    height: 100px;
-    background-color: rgb(34, 110, 196);
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-}
-#bar-chart td {
-    position: relative;
-    padding: 10px 5px;
-    width: 30px;
-    margin: 0;
-}
 #bar-chart {
-    margin-top: 250px;
+    position: relative;
+    display: flex;
+    align-items: end;
+    gap: 5px;
+    text-align: center;
 }
-.block {
+.bar {
     background-color: rgb(34, 110, 196);
+    width: 40px;
+}
+.chart-line {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: gray;
+    opacity: 0.5;
+    text-align: left;
+}
+.chart-line:nth-of-type(2) {
+    top: 50%;
+}
+.chart-line:nth-of-type(3) {
+    top: 100%;
+}
+#chart-lines {
+    position: absolute;
+    left: 0; top: 0;
+    height: 80px;
+    width: 100%;
 }
